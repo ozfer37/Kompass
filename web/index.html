@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="KOMPASS">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="KOMPASS">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>KOMPASS</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    #kompass-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #000000;
+      z-index: 999999;
+      transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+    }
+
+    #kompass-splash.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-mark {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
+    }
+
+    .splash-title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 7px;
+      color: #FFFFFF;
+      margin: 0;
+      padding-left: 7px;
+    }
+  </style>
+</head>
+<body>
+  <div id="kompass-splash">
+    <svg class="splash-mark" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Curvy squircle border container -->
+      <rect x="2" y="2" width="60" height="60" rx="14" fill="#060606" stroke="#E4FF00" stroke-opacity="0.45" stroke-width="1.5"/>
+      <!-- Outer ring -->
+      <circle cx="32" cy="32" r="20" stroke="white" stroke-opacity="0.85" stroke-width="1.8"/>
+      <!-- Rotated compass needle (~27.5 deg) -->
+      <g transform="rotate(27.5 32 32)">
+        <!-- North needle (#E4FF00) -->
+        <polygon points="32,17 36,32 28,32" fill="#E4FF00"/>
+        <!-- South needle (White) -->
+        <polygon points="32,47 36,32 28,32" fill="white" fill-opacity="0.9"/>
+        <!-- Center pivot dot -->
+        <circle cx="32" cy="32" r="2.2" fill="#060606"/>
+      </g>
+    </svg>
+    <h1 class="splash-title">KOMPASS</h1>
+  </div>
+
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('kompass-splash');
+      if (splash) {
+        splash.classList.add('fade-out');
+        setTimeout(function () {
+          if (splash && splash.parentNode) {
+            splash.parentNode.removeChild(splash);
+          }
+        }, 400);
+      }
+    });
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: '/' })
+          .then(function (reg) {
+            console.log('KOMPASS Web Push Service Worker registered with scope:', reg.scope);
+          }).catch(function (err) {
+            console.warn('KOMPASS Web Push Service Worker registration skipped:', err);
+          });
+      });
+    }
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
